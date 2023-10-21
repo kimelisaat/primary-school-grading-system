@@ -1,0 +1,64 @@
+# Define the grading scale
+grading_scale = {
+    "A+": (95, 100),
+    "A": (90, 94),
+    "A-": (85, 89),
+    "B+": (80, 84),
+    "B": (75, 79),
+    "B-": (70, 74),
+    "C+": (65, 69),
+    "C": (60, 64),
+    "C-": (55, 59),
+    "D": (50, 54),
+    "F": (0, 49)
+}
+
+# Function to calculate the grade based on the score
+def calculate_grade(score):
+    for grade, (lower, upper) in grading_scale.items():
+        if lower <= score <= upper:
+            return grade
+    return "Invalid"
+
+# Input school name, class, and class teacher's name
+school_name = input()
+class_name = input()
+teacher_name = input()
+
+# Create an empty list to store student information
+students = []
+
+# Input student data
+while True:
+    student_name = input("Enter student name (or 'exit' to finish): ")
+    if student_name == 'exit':
+        break
+    try:
+        eng_score = float(input())
+        kisw_score = float(input())
+        math_score = float(input())
+        sci_score = float(input())
+        sst_score = float(input())
+        
+        if all(0 <= score <= 100 for score in [eng_score, kisw_score, math_score, sci_score, sst_score]):
+            total_score = eng_score + kisw_score + math_score + sci_score + sst_score
+            grade = calculate_grade(total_score)
+            students.append((student_name, eng_score, kisw_score, math_score, sci_score, sst_score, total_score, grade))
+        else:
+            print("Invalid scores. Scores should be between 0 and 100.")
+    except ValueError:
+        print("Invalid input. Please enter valid numbers for scores.")
+
+# Sort students based on total marks (highest to lowest)
+students.sort(key=lambda student: student[6], reverse=True)
+
+# Display the grading list with school name, class, and teacher's name
+print("\nSchool: ", school_name)
+print("Class: ", class_name)
+print("Class Teacher: ", teacher_name)
+
+print("\nGrading List:")
+print("{:<20} {:<6} {:<6} {:<6} {:<6} {:<6} {:<6} {:<6} {:<6}".format("Name", "ENG", "KISW", "MATH", "SCI", "SST", "Total", "Grade", "Avg Grade"))
+for student_name, eng_score, kisw_score, math_score, sci_score, sst_score, total_score, grade in students:
+    average_grade = sum(grading_scale[grade][0] for grade in [eng_score, kisw_score, math_score, sci_score, sst_score]) / 5
+    print("{:<20} {:<6.2f} {:<6.2f} {:<6.2f} {:<6.2f} {:<6.2f} {:<6.2f} {:<6} {:<6.2f}".format(student_name, eng_score, kisw_score, math_score, sci_score, sst_score, total_score, grade, average_grade))
